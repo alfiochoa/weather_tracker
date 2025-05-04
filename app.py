@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from datetime import datetime, timedelta, timezone
 
 
 
@@ -133,10 +134,6 @@ supabase: Client = create_client(url, key)
 
 
 # Function to authenticate user
-url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
-
-#creating authentication function
 def authenticate_user(email: str, password: str):
     return supabase.auth.sign_in_with_password({
         "email": email,
@@ -154,7 +151,12 @@ else:
     print("❌ Authentication failed.")
 
 
+cutoff = datetime.now(timezone.utc) - timedelta(days=2)
 
+# delete query to avoid going over supabase size limit
+response = supabase.table("weather_logs").delete().lt("created_at", cutoff.isoformat()).execute()
+
+print(f"Deleted old entries count:\n{response}")
 
 
 #Checking for duplicates and inserting data
