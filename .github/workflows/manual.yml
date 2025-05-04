@@ -1,0 +1,30 @@
+name: Weather Tracker        # Name of your workflow
+
+on:                         
+  schedule:                  
+    - cron: '0 * * * *'      
+  workflow_dispatch:         
+
+jobs:                        
+  run-script:                
+    runs-on: ubuntu-latest   
+
+    steps:                   
+      - name: Checkout code
+        uses: actions/checkout@v3  
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'   
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the script
+        env:                       
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_EMAIL: ${{ secrets.SUPABASE_EMAIL }}
+          SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
+        run: python app.py         
