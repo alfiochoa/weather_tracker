@@ -8,11 +8,7 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-    env: 
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      SUPABASE_EMAIL: ${{ secrets.SUPABASE_EMAIL }}
-      SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
+    environment: production 
 
     steps:
       - name: Checkout code
@@ -28,3 +24,8 @@ jobs:
 
       - name: Run the weather tracker
         run: python app.py
+        env: 
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_EMAIL: ${{ secrets.SUPABASE_EMAIL }}
+          SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
