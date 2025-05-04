@@ -1,31 +1,33 @@
-name: Weather Tracker        # Name of your workflow
+name: Weather Tracker Job
 
-on:                         
-  schedule:                  
-    - cron: '0 * * * *'      
-  workflow_dispatch:         
+on:
+  schedule:
+    - cron: "0 * * * *"  # every hour
+  workflow_dispatch:     # allows manual trigger from GitHub UI
 
-jobs:                        
-  run-script:                
-    runs-on: ubuntu-latest   
+jobs:
+  run:
+    runs-on: ubuntu-latest
 
-    steps:                   
+    steps:
       - name: Checkout code
-        uses: actions/checkout@v3  
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'   
+          python-version: "3.11"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Debug environment variables
+        run: env | grep SUPABASE_
+
       - name: Run the weather tracker
         run: python app.py
         env:
-           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-           SUPABASE_EMAIL: ${{ secrets.SUPABASE_EMAIL }}
-           SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }
-
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_EMAIL: ${{ secrets.SUPABASE_EMAIL }}
+          SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
